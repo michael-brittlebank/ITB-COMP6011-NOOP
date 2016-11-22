@@ -1,0 +1,9 @@
+# ide
+.idea/
+*.iml
+
+.DS_Store
+
+# build files
+out/
+*.MF
