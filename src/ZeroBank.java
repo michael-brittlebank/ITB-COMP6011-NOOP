@@ -12,16 +12,17 @@
 /* of Account holders (maximum of 20).  */
 /* *************************************************/
 
+/* Imports */
 import java.util.Scanner;
 import java.util.InputMismatchException;
 import java.util.Arrays;
 
-class Main {
+class ZeroBank {
 
     /**
-     * main methods
+     *
+     * @param args String[]
      */
-
     public static void main(String[] args){
         System.out.println("Welcome to Zero Bank.");
 
@@ -100,10 +101,14 @@ class Main {
         } while(actionId != 6);
     }
 
-    /**
-     * display methods
-     */
+    /* ***************** Display methods ***************** */
 
+    /**
+     *
+     * @param averageAccountBalance double
+     * @param accountBalances double[]
+     * @return double
+     */
     private static double displayAverageAccountBalance(double averageAccountBalance, double[] accountBalances){
         if (averageAccountBalance == 0){
             double totalAccountBalances = 0;
@@ -116,6 +121,12 @@ class Main {
         return averageAccountBalance;
     }
 
+    /**
+     *
+     * @param highestAccountBalance double
+     * @param sortedAccountBalances double[]
+     * @return double
+     */
     private static double displayHighestAccountBalance(double highestAccountBalance, double[] sortedAccountBalances){
         if (highestAccountBalance == 0){
             highestAccountBalance = sortedAccountBalances[sortedAccountBalances.length-1];
@@ -124,6 +135,12 @@ class Main {
         return highestAccountBalance;
     }
 
+    /**
+     *
+     * @param lowestAccountBalance double
+     * @param sortedAccountBalances double[]
+     * @return double
+     */
     private static double displayLowestAccountBalance(double lowestAccountBalance, double[] sortedAccountBalances){
         if (lowestAccountBalance == 0){
             lowestAccountBalance = sortedAccountBalances[0];
@@ -132,12 +149,21 @@ class Main {
         return lowestAccountBalance;
     }
 
+    /**
+     *
+     * @param sortedAccountBalances double[]
+     */
     private static void displaySortedAccountBalances(double[] sortedAccountBalances) {
         for(int i = sortedAccountBalances.length; i > 0; i--){
             System.out.printf("Balance: €%s\n",String.format("%.2f", sortedAccountBalances[i-1]));
         }
     }
 
+    /**
+     *
+     * @param input Scanner
+     * @param alphabeticallySortedAccountBalances String[]
+     */
     private static void displayAccountSearchResults(Scanner input, String[] alphabeticallySortedAccountBalances){
         System.out.println("Whose account do you want to search for?");
         String accountHolder = getStringInput(input);
@@ -148,9 +174,12 @@ class Main {
         }
     }
 
+    /* ***************** Input methods ***************** */
 
     /**
-     * input methods
+     * This method gets a valid integer from the console input from the user
+     * @param input Scanner
+     * @return int
      */
     private static int getIntegerInput(Scanner input) {
         try {
@@ -164,6 +193,11 @@ class Main {
         }
     }
 
+    /**
+     * This method gets a valid double from the console input from the user
+     * @param input Scanner
+     * @return double
+     */
     private static double getDoubleInput(Scanner input) {
         try {
             return input.nextDouble();
@@ -175,6 +209,11 @@ class Main {
         }
     }
 
+    /**
+     * This method gets a valid String from the console input from the user
+     * @param input Scanner
+     * @return String
+     */
     private static String getStringInput(Scanner input) {
         try {
             return input.next();
@@ -186,13 +225,26 @@ class Main {
         }
     }
 
+    /* ***************** Input Validation methods ***************** */
+
     /**
-     * validation methods
+     * This method gets a valid integer from from the user
+     * This overloaded method allows for an optional maximum value to be specified
+     * @param input Scanner
+     * @param minimumValue int
+     * @return int
      */
     private static int getValidInteger(Scanner input, int minimumValue){
         return getValidInteger(input,minimumValue,Integer.MAX_VALUE);
     }
 
+    /**
+     * This method gets a valid integer from the user given a minimum and maximum value
+     * @param input Scanner
+     * @param minimumValue int
+     * @param maximumValue int
+     * @return int
+     */
     private static int getValidInteger(Scanner input, int minimumValue, int maximumValue){
         int integerInput;
         do {
@@ -206,10 +258,24 @@ class Main {
         return integerInput;
     }
 
+    /**
+     * This method gets a valid double from from the user
+     * This overloaded method allows for an optional maximum value to be specified
+     * @param input Scanner
+     * @param minimumValue double
+     * @return double
+     */
     private static double getValidDouble(Scanner input, double minimumValue) {
         return getValidDouble(input,minimumValue,Double.MAX_VALUE);
     }
 
+    /**
+     * This method gets a valid double from the user given a minimum and maximum value
+     * @param input Scanner
+     * @param minimumValue double
+     * @param maximumValue double
+     * @return double
+     */
     private static double getValidDouble(Scanner input, double minimumValue, double maximumValue){
         double doubleInput;
         do {
