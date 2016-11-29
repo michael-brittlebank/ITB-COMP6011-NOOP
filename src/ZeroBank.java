@@ -20,53 +20,56 @@ import java.util.Arrays;
 class ZeroBank {
 
     /**
-     *
+     * This is the primary entry function for the ZeroBank class.
+     * All double values are exported in a standard currency format with only
+     * two trailing decimal places being shown.
      * @param args String[]
      */
     public static void main(String[] args){
         System.out.println("Welcome to Zero Bank.");
 
+        /* variables */
         String accountString = "account";
         Scanner input = new Scanner(System.in);
-        input.useDelimiter("\\n"); //http://stackoverflow.com/questions/5032356/using-scanner-nextline
-        String[] accountHolders;
-        double[] accountBalances;
+        input.useDelimiter("\\n");//scanner uses newlines as delimiters for input
+        int actionId,
+                numberOfAccounts,
+                accountCounter = 0;
+        double averageAccountBalance = 0;
+        double[] accountBalances,
+                sortedAccountBalances;
+        String[] accountHolders,
+                alphabeticallySortedAccountBalances;
 
+        /* get the total number of bank accounts and instantiate arrays of corresponding length */
         System.out.println("Please enter the number of bank accounts.");
-        int numberOfAccounts = getValidInteger(input, 1, 20);
-
+        numberOfAccounts = getValidInteger(input, 1, 20);
         accountHolders = new String[numberOfAccounts];
         accountBalances = new double[numberOfAccounts];
 
-        int counter = 0;
-
+        /* get the bank account holders' names and balances */
         do {
-            System.out.printf("Please enter the holder's name for account #%d.\n",counter+1);
-            accountHolders[counter] = getStringInput(input);
-            System.out.printf("Please enter the balance for account #%d.\n",counter+1);
-            accountBalances[counter] = getValidDouble(input, 0);
-            counter++;
-        } while(counter < numberOfAccounts);
+            System.out.printf("Please enter the holder's name for account #%d.\n",accountCounter+1);//arrays are zero indexed
+            accountHolders[accountCounter] = getStringInput(input);
+            System.out.printf("Please enter the balance for account #%d.\n",accountCounter+1);//arrays are zero indexed
+            accountBalances[accountCounter] = getValidDouble(input, 0);
+            accountCounter++;
+        } while(accountCounter < numberOfAccounts);
 
-        //plural
+        /* display welcome message to provide user feedback */
         if (accountHolders.length != 1){
-            accountString += "s";
+            accountString += "s";//pluralize
         }
-
         System.out.printf("Hello, you have %d %s.\n",accountHolders.length,accountString);
 
-        //variables
-        int  actionId;
-        double averageAccountBalance = 0,
-                highestAccountBalance = 0,
-                lowestAccountBalance = 0;
 
-        //sort arrays
-        double[] sortedAccountBalances = accountBalances;
+        /* sort the arrays for faster searching and calculations */
+        sortedAccountBalances = accountBalances;
         Arrays.sort(accountBalances);
-        String[] alphabeticallySortedAccountBalances = accountHolders;
+        alphabeticallySortedAccountBalances = accountHolders;
         Arrays.sort(accountHolders);
 
+        /* provide a menu to the user and allow investigation of the account data */
         do {
             System.out.println("\n-----What action would you like to perform?-----");
             System.out.println("Option 1: Display average account balance");
@@ -81,10 +84,10 @@ class ZeroBank {
                     averageAccountBalance = displayAverageAccountBalance(averageAccountBalance,accountBalances);
                     break;
                 case 2:
-                    highestAccountBalance = displayHighestAccountBalance(highestAccountBalance,sortedAccountBalances);
+                    displayHighestAccountBalance(sortedAccountBalances);
                     break;
                 case 3:
-                    displayLowestAccountBalance(lowestAccountBalance,sortedAccountBalances);
+                    displayLowestAccountBalance(sortedAccountBalances);
                     break;
                 case 4:
                     displaySortedAccountBalances(sortedAccountBalances);
@@ -104,7 +107,9 @@ class ZeroBank {
     /* ***************** Display methods ***************** */
 
     /**
-     *
+     * This method prints the average account balance to the console.
+     * If the average account balance is not zero (meaning it's already been set),
+     * the loop and calculations are skipped.
      * @param averageAccountBalance double
      * @param accountBalances double[]
      * @return double
@@ -122,35 +127,25 @@ class ZeroBank {
     }
 
     /**
-     *
-     * @param highestAccountBalance double
+     * This method prints the highest account balance to the console assuming a sorted array is provided.
      * @param sortedAccountBalances double[]
-     * @return double
      */
-    private static double displayHighestAccountBalance(double highestAccountBalance, double[] sortedAccountBalances){
-        if (highestAccountBalance == 0){
-            highestAccountBalance = sortedAccountBalances[sortedAccountBalances.length-1];
-        }
+    private static void displayHighestAccountBalance(double[] sortedAccountBalances){
+        double highestAccountBalance = sortedAccountBalances[sortedAccountBalances.length-1];
         System.out.printf("Highest account balance: €%s\n",String.format("%.2f", highestAccountBalance));
-        return highestAccountBalance;
     }
 
     /**
-     *
-     * @param lowestAccountBalance double
+     * This method prints the lowest account balance to the console assuming a sorted array is provided.
      * @param sortedAccountBalances double[]
-     * @return double
      */
-    private static double displayLowestAccountBalance(double lowestAccountBalance, double[] sortedAccountBalances){
-        if (lowestAccountBalance == 0){
-            lowestAccountBalance = sortedAccountBalances[0];
-        }
+    private static void displayLowestAccountBalance(double[] sortedAccountBalances){
+        double lowestAccountBalance = sortedAccountBalances[0];
         System.out.printf("Lowest account balance: €%s\n",String.format("%.2f", lowestAccountBalance));
-        return lowestAccountBalance;
     }
 
     /**
-     *
+     * This method prints the account balances in ascending order assuming a sorted array is provided.
      * @param sortedAccountBalances double[]
      */
     private static void displaySortedAccountBalances(double[] sortedAccountBalances) {
@@ -160,7 +155,8 @@ class ZeroBank {
     }
 
     /**
-     *
+     * This method searches to determine if an account holder exists given a name entered by the client.
+     * This method assumes a sorted array is provided.
      * @param input Scanner
      * @param alphabeticallySortedAccountBalances String[]
      */
@@ -174,62 +170,11 @@ class ZeroBank {
         }
     }
 
-    /* ***************** Input methods ***************** */
-
-    /**
-     * This method gets a valid integer from the console input from the user
-     * @param input Scanner
-     * @return int
-     */
-    private static int getIntegerInput(Scanner input) {
-        try {
-            return input.nextInt();
-            //https://docs.oracle.com/javase/7/docs/api/java/util/InputMismatchException.html
-        } catch (InputMismatchException e){
-            System.out.println("Invalid input. Please enter an integer.");
-            input.next();
-            //recursion
-            return getIntegerInput(input);
-        }
-    }
-
-    /**
-     * This method gets a valid double from the console input from the user
-     * @param input Scanner
-     * @return double
-     */
-    private static double getDoubleInput(Scanner input) {
-        try {
-            return input.nextDouble();
-        } catch (InputMismatchException e){
-            System.out.println("Invalid input. Please enter a double.");
-            input.next();
-            //recursion
-            return getDoubleInput(input);
-        }
-    }
-
-    /**
-     * This method gets a valid String from the console input from the user
-     * @param input Scanner
-     * @return String
-     */
-    private static String getStringInput(Scanner input) {
-        try {
-            return input.next();
-        } catch (InputMismatchException e){
-            System.out.println("Invalid input. Please enter a string.");
-            input.next();
-            //recursion
-            return getStringInput(input);
-        }
-    }
-
     /* ***************** Input Validation methods ***************** */
 
     /**
-     * This method gets a valid integer from from the user
-     * This overloaded method allows for an optional maximum value to be specified
+     * This method gets a valid integer from from the user.
+     * This overloaded method allows for an optional maximum value to be specified.
      * @param input Scanner
      * @param minimumValue int
      * @return int
@@ -239,7 +184,7 @@ class ZeroBank {
     }
 
     /**
-     * This method gets a valid integer from the user given a minimum and maximum value
+     * This method gets a valid integer from the user given a minimum and maximum value.
      * @param input Scanner
      * @param minimumValue int
      * @param maximumValue int
@@ -259,8 +204,8 @@ class ZeroBank {
     }
 
     /**
-     * This method gets a valid double from from the user
-     * This overloaded method allows for an optional maximum value to be specified
+     * This method gets a valid double from from the user.
+     * This overloaded method allows for an optional maximum value to be specified.
      * @param input Scanner
      * @param minimumValue double
      * @return double
@@ -270,7 +215,7 @@ class ZeroBank {
     }
 
     /**
-     * This method gets a valid double from the user given a minimum and maximum value
+     * This method gets a valid double from the user given a minimum and maximum value.
      * @param input Scanner
      * @param minimumValue double
      * @param maximumValue double
@@ -287,5 +232,55 @@ class ZeroBank {
             }
         } while(doubleInput > maximumValue || doubleInput < minimumValue);
         return doubleInput;
+    }
+
+    /* ***************** Input methods ***************** */
+
+    /**
+     * This method gets a valid integer from the console input from the user.
+     * It utilizes recursion to ensure a correct input type is provided.
+     * @param input Scanner
+     * @return int
+     */
+    private static int getIntegerInput(Scanner input) {
+        try {
+            return input.nextInt();
+        } catch (InputMismatchException e){
+            System.out.println("Invalid input. Please enter an integer.");
+            input.next();
+            return getIntegerInput(input);//recursion
+        }
+    }
+
+    /**
+     * This method gets a valid double from the console input from the user.
+     * It utilizes recursion to ensure a correct input type is provided.
+     * @param input Scanner
+     * @return double
+     */
+    private static double getDoubleInput(Scanner input) {
+        try {
+            return input.nextDouble();
+        } catch (InputMismatchException e){
+            System.out.println("Invalid input. Please enter a double.");
+            input.next();
+            return getDoubleInput(input);//recursion
+        }
+    }
+
+    /**
+     * This method gets a valid String from the console input from the user.
+     * It utilizes recursion to ensure a correct input type is provided.
+     * @param input Scanner
+     * @return String
+     */
+    private static String getStringInput(Scanner input) {
+        try {
+            return input.next();
+        } catch (InputMismatchException e){
+            System.out.println("Invalid input. Please enter a string.");
+            input.next();
+            return getStringInput(input);//recursion
+        }
     }
 }
