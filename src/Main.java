@@ -13,9 +13,8 @@
 /* *************************************************/
 
 import java.util.Scanner;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.InputMismatchException;
+import java.util.Arrays;
 
 class Main {
 
@@ -56,10 +55,17 @@ class Main {
         System.out.printf("Hello, you have %d %s.\n",accountHolders.length,accountString);
 
         //variables
-        int actionId;
+        int  actionId;
         double averageAccountBalance = 0,
                 highestAccountBalance = 0,
                 lowestAccountBalance = 0;
+
+        //sort arrays
+        double[] sortedAccountBalances = accountBalances;
+        Arrays.sort(accountBalances);
+        String[] alphabeticallySortedAccountBalances = accountHolders;
+        Arrays.sort(accountHolders);
+
         do {
             System.out.println("\n-----What action would you like to perform?-----");
             System.out.println("Option 1: Display average account balance");
@@ -70,21 +76,21 @@ class Main {
             System.out.println("Option 6: Exit and quit program");
             actionId = getIntegerInput(input);
             switch(actionId){
-//                case 1:
-//                    averageAccountBalance = displayAverageAccountBalance(averageAccountBalance);
-//                    break;
-//                case 2:
-//                    displayHighestAccountBalance(highestAccountBalance);
-//                    break;
-//                case 3:
-//                    displayLowestAccountBalance(lowestAccountBalance);
-//                    break;
-//                case 4:
-//                    displaySortedAccountBalances();
-//                    break;
-//                case 5:
-//                    displayAccountSearchResults();
-//                    break;
+                case 1:
+                    averageAccountBalance = displayAverageAccountBalance(averageAccountBalance,accountBalances);
+                    break;
+                case 2:
+                    highestAccountBalance = displayHighestAccountBalance(highestAccountBalance,sortedAccountBalances);
+                    break;
+                case 3:
+                    displayLowestAccountBalance(lowestAccountBalance,sortedAccountBalances);
+                    break;
+                case 4:
+                    displaySortedAccountBalances(sortedAccountBalances);
+                    break;
+                case 5:
+                    displayAccountSearchResults(input,alphabeticallySortedAccountBalances);
+                    break;
                 case 6:
                     System.out.println("Thank you, goodbye.");
                     break;
@@ -98,91 +104,50 @@ class Main {
      * display methods
      */
 
-//    private static double displayAverageAccountBalance(double averageAccountBalance){
-//        if (averageAccountBalance == 0){
-//            averageAccountBalance = getAverageAccountBalance();
-//        }
-//        System.out.printf("Average account balance: €%s\n",String.format("%.2f", averageAccountBalance));
-//        return averageAccountBalance;
-//    }
-//
-//    private static double displayHighestAccountBalance(double highestAccountBalance){
-//        if (highestAccountBalance == 0){
-//            highestAccountBalance = getHighestAccountBalance();
-//        }
-//        System.out.printf("Highest account balance: €%s\n",String.format("%.2f", highestAccountBalance));
-//        return highestAccountBalance;
-//    }
-//
-//    private static double displayLowestAccountBalance(double lowestAccountBalance){
-//        if (lowestAccountBalance == 0){
-//            lowestAccountBalance = getLowestAccountBalance();
-//        }
-//        System.out.printf("Lowest account balance: €%s\n",String.format("%.2f", lowestAccountBalance));
-//        return lowestAccountBalance;
-//    }
-//
-//    private static void displaySortedAccountBalances() {
-//        sortBankAccountsByBalance();
-//        for(Account account:this.sortedBankAccountsByBalance){
-//            System.out.printf("Balance: €%s\n",String.format("%.2f", account.getAccountBalance()));
-//        }
-//    }
-//
-//    private static void displayAccountSearchResults(){
-//        System.out.println("Whose account do you want to search for?");
-//        String accountHolder = getStringInput(input);
-//        System.out.println(getAccountByHolder(accountHolder));
-//    }
+    private static double displayAverageAccountBalance(double averageAccountBalance, double[] accountBalances){
+        if (averageAccountBalance == 0){
+            double totalAccountBalances = 0;
+            for(double accountBalance:accountBalances){
+                totalAccountBalances += accountBalance;
+            }
+            averageAccountBalance = totalAccountBalances/accountBalances.length;
+        }
+        System.out.printf("Average account balance: €%s\n",String.format("%.2f", averageAccountBalance));
+        return averageAccountBalance;
+    }
 
-    /**
-     * getter methods
-     */
+    private static double displayHighestAccountBalance(double highestAccountBalance, double[] sortedAccountBalances){
+        if (highestAccountBalance == 0){
+            highestAccountBalance = sortedAccountBalances[sortedAccountBalances.length-1];
+        }
+        System.out.printf("Highest account balance: €%s\n",String.format("%.2f", highestAccountBalance));
+        return highestAccountBalance;
+    }
 
-//    private static double getAverageAccountBalance(){
-//        double totalBalances = 0;
-//        for(Account account:this.bankAccounts){
-//            totalBalances += account.getAccountBalance();
-//        }
-//        return totalBalances/this.bankAccounts.size();
-//    }
-//
-//    private static double getHighestAccountBalance(){
-//        sortBankAccountsByBalance();
-//        return this.sortedBankAccountsByBalance.get(0).getAccountBalance();
-//    }
-//
-//    private static double getLowestAccountBalance(){
-//        sortBankAccountsByBalance();
-//        return this.sortedBankAccountsByBalance.get(this.sortedBankAccountsByBalance.size()-1).getAccountBalance();
-//    }
-//
-//    private static String getAccountByHolder(String accountHolder){
-//        sortBankAccountsByHolder();
-//        int searchIndex = Collections.binarySearch(this.sortedBankAccountsByName, new Account(accountHolder));
-//        if (searchIndex >= 0) {
-//            return this.sortedBankAccountsByName.get(searchIndex).toString();
-//        } else {
-//            return "Account holder not found";
-//        }
-//    }
+    private static double displayLowestAccountBalance(double lowestAccountBalance, double[] sortedAccountBalances){
+        if (lowestAccountBalance == 0){
+            lowestAccountBalance = sortedAccountBalances[0];
+        }
+        System.out.printf("Lowest account balance: €%s\n",String.format("%.2f", lowestAccountBalance));
+        return lowestAccountBalance;
+    }
 
-    /**
-     * sorter methods
-     */
-//    private static void sortBankAccountsByBalance(){
-//        if (this.sortedBankAccountsByBalance == null || this.sortedBankAccountsByBalance.isEmpty()) {
-//            this.sortedBankAccountsByBalance = this.bankAccounts;
-//            Collections.sort(this.sortedBankAccountsByBalance, new AccountBalanceComparator());
-//        }
-//    }
-//
-//    private static void sortBankAccountsByHolder(){
-//        if (this.sortedBankAccountsByName == null || this.sortedBankAccountsByName.isEmpty()) {
-//            this.sortedBankAccountsByName = this.bankAccounts;
-//            Collections.sort(this.sortedBankAccountsByName, new AccountHolderComparator());
-//        }
-//    }
+    private static void displaySortedAccountBalances(double[] sortedAccountBalances) {
+        for(int i = sortedAccountBalances.length; i > 0; i--){
+            System.out.printf("Balance: €%s\n",String.format("%.2f", sortedAccountBalances[i-1]));
+        }
+    }
+
+    private static void displayAccountSearchResults(Scanner input, String[] alphabeticallySortedAccountBalances){
+        System.out.println("Whose account do you want to search for?");
+        String accountHolder = getStringInput(input);
+        if(Arrays.binarySearch(alphabeticallySortedAccountBalances, accountHolder) >= 0){
+            System.out.println("Account holder found");
+        } else {
+            System.out.println("Account holder not found");
+        }
+    }
+
 
     /**
      * input methods
