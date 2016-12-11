@@ -247,7 +247,6 @@ class ZeroBank {
             return input.nextInt();
         } catch (InputMismatchException e){
             System.out.println("Invalid input. Please enter an integer.");
-            input.next();
             return getIntegerInput(input);//recursion
         }
     }
@@ -263,7 +262,6 @@ class ZeroBank {
             return input.nextDouble();
         } catch (InputMismatchException e){
             System.out.println("Invalid input. Please enter a double.");
-            input.next();
             return getDoubleInput(input);//recursion
         }
     }
@@ -276,10 +274,15 @@ class ZeroBank {
      */
     private static String getStringInput(Scanner input) {
         try {
-            return input.next();
+            String inputLine = input.next().trim();
+            if (inputLine.length() > 0) {//check that it's not just whitespace
+                return inputLine;
+            } else {
+                System.out.println("Invalid input. Please enter a string of at least one character.");
+                return getStringInput(input);//recursion
+            }
         } catch (InputMismatchException e){
             System.out.println("Invalid input. Please enter a string.");
-            input.next();
             return getStringInput(input);//recursion
         }
     }
